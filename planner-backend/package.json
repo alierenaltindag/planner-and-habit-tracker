@@ -1,0 +1,40 @@
+{
+  "name": "planner-backend",
+  "private": true,
+  "devDependencies": {
+    "@types/bcryptjs": "^3.0.0",
+    "@types/bun": "latest",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "@types/uuid": "^11.0.0",
+    "drizzle-kit": "^0.31.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "scripts": {
+    "dev": "bun run --watch src/app.ts",
+    "start": "bun run src/app.ts"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-auth": "^1.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "postgres": "^3.4.7",
+    "redis": "^5.10.0",
+    "uuid": "^13.0.0",
+    "winston": "^3.18.3",
+    "zod": "^4.1.13"
+  }
+}
