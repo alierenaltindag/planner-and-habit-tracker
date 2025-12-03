@@ -13,7 +13,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
         }
 
         // Log the incoming request
-        logger.info(`Incoming ${req.method} request to ${req.originalUrl}`, {
+        logger.debug(`Incoming ${req.method} request to ${req.originalUrl}`, {
             method: req.method,
             url: req.originalUrl,
             ip: req.ip,
@@ -24,7 +24,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
         const start = Date.now();
         res.on('finish', () => {
             const duration = Date.now() - start;
-            logger.info(`Request completed`, {
+            logger.debug(`Request completed`, {
                 method: req.method,
                 url: req.originalUrl,
                 statusCode: res.statusCode,

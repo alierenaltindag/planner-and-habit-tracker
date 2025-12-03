@@ -8,6 +8,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { requestLogger } from './middleware/requestLogger';
 import { env } from './config/env';
 import { connectRedis } from './config/redis';
+import { logger } from './utils/logger';
 
 const app = express();
 const PORT = env.PORT;
@@ -45,7 +46,7 @@ app.get('/api/health', (req, res) => {
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    logger.info(`Server is running on port ${PORT}`);
 });
 
 export default app;

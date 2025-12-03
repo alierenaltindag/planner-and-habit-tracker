@@ -2,5 +2,36 @@
   "HomePage": {
     "title": "Planner & Habit Tracker",
     "welcome": "Welcome to your Planner"
+  },
+  "Auth": {
+    "Login": {
+      "title": "Welcome back",
+      "description": "Enter your credentials to access your account",
+      "google": "Log in with Google",
+      "or": "Or continue with",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Login",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Register",
+      "success": "Logged in successfully!",
+      "failed": "Login failed",
+      "error": "An error occurred. Please try again."
+    },
+    "Register": {
+      "title": "Create an account",
+      "description": "Enter your email below to create your account",
+      "google": "Sign up with Google",
+      "or": "Or continue with",
+      "name": "Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Login",
+      "success": "Account created successfully!",
+      "failed": "Registration failed",
+      "error": "An error occurred. Please try again."
+    }
   }
 }

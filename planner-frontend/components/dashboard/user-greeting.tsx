@@ -1,12 +1,40 @@
 "use client"
 
-import { useSession } from "@/lib/auth"
+import { useSession, authClient, syncSubscription } from "@/lib/auth"
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button"
 
 export function UserGreeting() {
-    const { data: session, isPending } = useSession()
+    const { data: session } = useSession()
 
-    if (isPending) return <p>Loading...</p>
-    if (!session?.user) return null
+    if (!session) return null
 
-    return <p>Welcome, {session.user.name || session.user.email}</p>
+    const handleSyncSubscription = async () => {
+        toast.promise(
+            syncSubscription(),
+            {
+                loading: 'Syncing subscription...',
+                success: 'Subscription synced!',
+                error: 'Failed to sync subscription'
+            }
+        );
+    }
+
+    return (
+        <div className="flex items-center gap-4">
+            <p>Welcome, {session.user.name || session.user.email}</p>
+            <Button onClick={() =>
+                // @ts-ignore
+                authClient.portal()
+            }>
+                Manage Subscription
+            </Button>
+            <Button
+                variant="outline"
+                onClick={handleSyncSubscription}
+            >
+                Sync Subscription
+            </Button>
+        </div>
+    )
 }
