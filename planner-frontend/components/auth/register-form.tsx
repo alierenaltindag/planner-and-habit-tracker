@@ -13,10 +13,12 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
-import { signUp } from "@/lib/auth"
+import { signUp, signIn } from "@/lib/auth"
+import Link from "next/link"
+import { useTranslations } from "next-intl"
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -25,6 +27,7 @@ const formSchema = z.object({
 })
 
 export function RegisterForm() {
+    const t = useTranslations("Auth.Register")
     const router = useRouter()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -40,38 +43,74 @@ export function RegisterForm() {
             const { data, error } = await signUp.email({
                 email: values.email,
                 password: values.password,
-                name: values.name || "", // Better auth expects string, not undefined
+                name: values.name || "",
             });
 
             if (error) {
-                toast.error(error.message || "Registration failed")
+                toast.error(error.message || t("failed"))
                 return
             }
 
-            toast.success("Account created successfully!")
+            toast.success(t("success"))
             router.push("/dashboard")
             router.refresh()
         } catch (error) {
-            toast.error("An error occurred. Please try again.")
+            toast.error(t("error"))
+            console.error(error)
+        }
+    }
+
+    async function onGoogleSignIn() {
+        try {
+            const { data, error } = await signIn.social({
+                provider: "google",
+                callbackURL: "/dashboard",
+            })
+
+            if (error) {
+                toast.error(error.message || "Google login failed")
+            }
+        } catch (error) {
+            toast.error("An error occurred with Google login.")
             console.error(error)
         }
     }
 
     return (
-        <Card className="w-[350px]">
-            <CardHeader>
-                <CardTitle>Register</CardTitle>
-                <CardDescription>Create a new account.</CardDescription>
+        <Card className="w-[350px] shadow-lg">
+            <CardHeader className="space-y-1">
+                <CardTitle className="text-2xl font-bold text-center">{t("title")}</CardTitle>
+                <CardDescription className="text-center">
+                    {t("description")}
+                </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid gap-4">
+                <div className="grid grid-cols-1 gap-2">
+                    <Button variant="outline" onClick={onGoogleSignIn} className="w-full">
+                        <svg className="mr-2 h-4 w-4" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 512">
+                            <path fill="currentColor" d="M488 261.8C488 403.3 391.1 504 248 504 110.8 504 0 393.2 0 256S110.8 8 248 8c66.8 0 123 24.5 166.3 64.9l-67.5 64.9C258.5 52.6 94.3 116.6 94.3 256c0 86.5 69.1 156.6 153.7 156.6 98.2 0 135-70.4 140.8-106.9H248v-85.3h236.1c2.3 12.7 3.9 24.9 3.9 41.4z"></path>
+                        </svg>
+                        {t("google")}
+                    </Button>
+                </div>
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-background px-2 text-muted-foreground">
+                            {t("or")}
+                        </span>
+                    </div>
+                </div>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
                             name="name"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Name</FormLabel>
+                                    <FormLabel>{t("name")}</FormLabel>
                                     <FormControl>
                                         <Input placeholder="John Doe" {...field} />
                                     </FormControl>
@@ -84,7 +123,7 @@ export function RegisterForm() {
                             name="email"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Email</FormLabel>
+                                    <FormLabel>{t("email")}</FormLabel>
                                     <FormControl>
                                         <Input placeholder="email@example.com" {...field} />
                                     </FormControl>
@@ -97,7 +136,7 @@ export function RegisterForm() {
                             name="password"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel>{t("password")}</FormLabel>
                                     <FormControl>
                                         <Input type="password" placeholder="******" {...field} />
                                     </FormControl>
@@ -105,10 +144,18 @@ export function RegisterForm() {
                                 </FormItem>
                             )}
                         />
-                        <Button type="submit" className="w-full">Register</Button>
+                        <Button type="submit" className="w-full">{t("submit")}</Button>
                     </form>
                 </Form>
             </CardContent>
+            <CardFooter className="flex flex-col space-y-2">
+                <div className="text-sm text-center text-muted-foreground">
+                    {t("hasAccount")}{" "}
+                    <Link href="/login" className="underline underline-offset-4 hover:text-primary">
+                        {t("loginLink")}
+                    </Link>
+                </div>
+            </CardFooter>
         </Card>
     )
 }
